@@ -1,0 +1,730 @@
+<!doctype html>
+<html data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Musti - Go Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+
+    /* Enhanced Weather/Crypto Stats Bar */
+    .weather-bar {
+      background: rgba(26, 26, 46, 0.8);
+      border-radius: 16px;
+      padding: 15px 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .weather-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      height: 100%;
+    }
+
+    .weather-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .location-icon {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+    }
+
+    .temp-icon {
+      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+      color: white;
+    }
+
+    .weather-icon-bg {
+      background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+      color: white;
+    }
+
+    .sunset-icon {
+      background: linear-gradient(135deg, #a11 0%, #f0b90b 100%);
+      color: white;
+    }
+
+    .sunrise-icon {
+      background: linear-gradient(135deg, #777 0%, #a11 100%);
+      color: white;
+    }
+
+    .iftar-icon {
+      background: linear-gradient(135deg, #523 0%, #213 100%);
+      color: white;
+    }
+
+    .weather-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .weather-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+
+    .weather-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Crypto Cards Section */
+    .crypto-section {
+      margin: 30px 0;
+    }
+
+    .crypto-title {
+      color: #90cdf4;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .crypto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .crypto-card {
+      background: rgba(26, 26, 46, 0.8);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .crypto-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .crypto-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .crypto-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 2rem;
+    }
+
+    .btc-logo {
+      background: linear-gradient(135deg, #f7931a 0%, #f0b90b 100%);
+      color: white;
+    }
+
+    .eth-logo {
+      background: linear-gradient(135deg, #627eea 0%, #8b5cf6 100%);
+      color: white;
+    }
+
+    .atom-logo {
+      background: linear-gradient(135deg, #a21 0%, #a26 100%);
+      color: white;
+    }
+
+    .link-logo {
+      background: linear-gradient(135deg, #191 0%, #19a 100%);
+      color: white;
+    }
+
+    .fil-logo {
+      background: linear-gradient(135deg, #321 0%, #327 100%);
+      color: white;
+    }
+
+    .xlm-logo {
+      background: linear-gradient(135deg, #545 0%, #551 100%);
+      color: white;
+    }
+
+    .theta-logo {
+      background: linear-gradient(135deg, #111 0%, #a01 100%);
+      color: white;
+    }
+
+    .bnb-logo {
+      background: linear-gradient(135deg, #abe 0%, #a1e 100%);
+      color: white;
+    }
+
+    .xrp-logo {
+      background: linear-gradient(135deg, #c12 0%, #cc2 100%);
+      color: white;
+    }
+
+    .iota-logo {
+      background: linear-gradient(135deg, #941 0%, #909 100%);
+      color: white;
+    }
+
+
+    .crypto-info h3 {
+      color: white;
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .crypto-symbol {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+
+    .crypto-price {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 15px;
+    }
+
+    .crypto-change {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .change-positive {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .change-negative {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .change-neutral {
+      background: rgba(148, 163, 184, 0.15);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+
+    .crypto-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    /* Divider for weather bar */
+    .divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 15px;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .weather-bar {
+        padding: 15px;
+      }
+
+      .weather-item {
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+
+      .weather-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        font-size: 1.1rem;
+      }
+
+      .weather-value {
+        font-size: 1.1rem;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .crypto-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .crypto-card {
+        padding: 20px;
+      }
+
+      .crypto-price {
+        font-size: 1.6rem;
+      }
+    }
+
+    /* Header styling */
+    .main-header {
+      margin-bottom: 30px;
+    }
+
+    .main-header h1 {
+      color: white;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .timestamp {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 15px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-4">
+    <!-- Header -->
+    <div class="main-header">
+      <h1>
+        <i class="fa-brands fa-linux" style="margin-right: 15px; color: #90cdf4;"></i>
+        Musti GO Portal
+        <i class="fa-brands fa-golang" style="margin-left: 15px; color: #00add8;"></i>
+      </h1>
+
+      <!-- WebSocket connection -->
+      <br hx-ext="ws" ws-connect="ws://localhost:8080/ws">
+
+      <!-- Timestamp -->
+      <div class="timestamp" id="update-timestamp">
+        <i class="fas fa-circle" style="color: #68d391; margin-right: 8px;"></i>
+        Waiting for data...
+      </div>
+    </div>
+
+    <!-- Weather Bar -->
+    <div class="weather-bar">
+      <div class="row align-items-center">
+        <!-- Location -->
+        <div class="col-lg col-md-6">
+          <div class="weather-item">
+            <div class="weather-icon location-icon">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Location</div>
+              <div class="weather-value" id="location">--</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto d-none d-lg-block">
+          <div class="divider"></div>
+        </div>
+
+        <!-- Temperature -->
+        <div class="col-lg col-md-6">
+          <div class="weather-item">
+            <div class="weather-icon temp-icon">
+              <i class="fa-solid fa-temperature-half"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Temp / FeelsLike</div>
+              <div class="weather-value" id="temp">-/-°C</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto d-none d-lg-block">
+          <div class="divider"></div>
+        </div>
+
+        <!-- Weather -->
+        <div class="col-lg col-md-12">
+          <div class="weather-item">
+            <div class="weather-icon weather-icon-bg">
+              <i class="fa-solid fa-cloud-sun"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Weather</div>
+              <div class="weather-value" id="weather">--</div>
+            </div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+
+        <!-- Sunset -->
+        <div class="col-lg col-md-6">
+          <div class="weather-item">
+            <div class="weather-icon sunset-icon">
+              <i class="fa-solid fa-mountain-sun"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Sunset</div>
+              <div class="weather-value" id="sunset">--</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto d-none d-lg-block">
+          <div class="divider"></div>
+        </div>
+
+        <!-- sunrise -->
+        <div class="col-lg col-md-6">
+          <div class="weather-item">
+            <div class="weather-icon sunrise-icon">
+              <i class="fa-regular fa-sun"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Sunrise</div>
+              <div class="weather-value" id="sunrise">--</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto d-none d-lg-block">
+          <div class="divider"></div>
+        </div>
+
+        <!-- iftar -->
+        <div class="col-lg col-md-12">
+          <div class="weather-item">
+            <div class="weather-icon iftar-icon">
+              <i class="fa-solid fa-hourglass-start"></i>
+            </div>
+            <div class="weather-content">
+              <div class="weather-label">Sunset Time Left</div>
+              <div class="weather-value" id="iftar">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prime Asset Section -->
+    <div class="crypto-section">
+      <h2 class="crypto-title">
+        <i class="fa-solid fa-money-bill-1-wave" style="margin-right: 10px;"></i>
+        Prime Markets
+      </h2>
+
+      <div class="crypto-grid">
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo btc-logo">
+              <i class="fa-solid fa-dollar-sign"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Dollar</h3>
+              <div class="crypto-symbol">USD/TL</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="dolar-price">$--</div>
+          <div class="crypto-change change-neutral" id="dolar-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo btc-logo">
+              <i class="fa-solid fa-euro-sign"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Euro</h3>
+              <div class="crypto-symbol">EUR/TL</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="euro-price">$--</div>
+          <div class="crypto-change change-neutral" id="euro-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo btc-logo">
+              <i class="fa-solid fa-euro-sign"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Euro/Dollar</h3>
+              <div class="crypto-symbol">EUR/USD</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="euro-dolar-price">$--</div>
+          <div class="crypto-change change-neutral" id="euro-dolar-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo btc-logo">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Gold</h3>
+              <div class="crypto-symbol">Gold/USD</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="gold-price">$--</div>
+          <div class="crypto-change change-neutral" id="gold-change">--%</div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Crypto Cards Section -->
+    <div class="crypto-section">
+      <h2 class="crypto-title">
+        <i class="fas fa-coins" style="margin-right: 10px;"></i>
+        Cryptocurrency Markets
+      </h2>
+
+      <div class="crypto-grid">
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo btc-logo">
+              <i class="fa-brands fa-bitcoin"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Bitcoin</h3>
+              <div class="crypto-symbol">BTC/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="btc-price">$--</div>
+          <div class="crypto-change change-neutral" id="btc-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo eth-logo">
+              <i class="fa-brands fa-ethereum"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Ethereum</h3>
+              <div class="crypto-symbol">ETH/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="eth-price">$--</div>
+          <div class="crypto-change change-neutral" id="eth-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo atom-logo">
+              <i class="fa-solid fa-atom"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>ATOM</h3>
+              <div class="crypto-symbol">ATOM/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="atom-price">$--</div>
+          <div class="crypto-change change-neutral" id="atom-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo link-logo">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Link</h3>
+              <div class="crypto-symbol">LINK/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="link-price">$--</div>
+          <div class="crypto-change change-neutral" id="link-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo xlm-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>XLM</h3>
+              <div class="crypto-symbol">XLM/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="xlm-price">$--</div>
+          <div class="crypto-change change-neutral" id="xlm-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo fil-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>FIL</h3>
+              <div class="crypto-symbol">FIL/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="fil-price">$--</div>
+          <div class="crypto-change change-neutral" id="fil-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo theta-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>Theta</h3>
+              <div class="crypto-symbol">THETA/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="theta-price">$--</div>
+          <div class="crypto-change change-neutral" id="theta-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo bnb-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>BNB</h3>
+              <div class="crypto-symbol">BNB/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="bnb-price">$--</div>
+          <div class="crypto-change change-neutral" id="bnb-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo xrp-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>XRP</h3>
+              <div class="crypto-symbol">XRP/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="xrp-price">$--</div>
+          <div class="crypto-change change-neutral" id="xrp-change">--%</div>
+
+        </div>
+
+        <div class="crypto-card">
+          <div class="crypto-header">
+            <div class="crypto-logo iota-logo">
+              <i class="fa-brands fa-brave-reverse"></i>
+            </div>
+            <div class="crypto-info">
+              <h3>IOTA</h3>
+              <div class="crypto-symbol">IOTA/USDT</div>
+            </div>
+          </div>
+
+          <div class="crypto-price" id="iota-price">$--</div>
+          <div class="crypto-change change-neutral" id="iota-change">--%</div>
+
+        </div>
+      </div>
+
+      <div class="text-center text-muted mt-4">
+        <small>
+          <i class="fas fa-sync-alt"></i>
+          Live updates via WebSocket | Last update: <span id="market-update-time">--:--:--</span>
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTMX and WebSocket Scripts -->
+  <script src="https://unpkg.com/htmx.org@1.9.12"
+    integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+</body>
+
+</html>

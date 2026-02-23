@@ -1,0 +1,3 @@
+[submodule "go-api"]
+	path = go-api
+	url = git@github.com:mozkaya1/go-api.git

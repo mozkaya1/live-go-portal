@@ -1,0 +1,49 @@
+services:
+  weather:
+    build: https://github.com/mozkaya1/go-api.git
+    container_name: weather-api
+    ports:
+      - "8081:8080"
+    environment:
+      - PORT=8080
+    networks:
+      - portal-network
+    restart: unless-stopped
+    command: ["/app/main"]  # Absolute path, no need for working_dir
+
+  real-currency:
+    build: https://github.com/mozkaya1/real-currency.git
+    container_name: real-currency-api
+    ports:
+      - "8082:8080"
+    environment:
+      - PORT=8080
+    networks:
+      - portal-network
+    restart: unless-stopped
+    command: ["/app/main"]  # Absolute path, no need for working_dir
+
+  portal:
+    build: .
+    container_name: go-portal
+    ports:
+      - "8080:8080"
+    environment:
+      - refreshTime=5
+      # -- Use queries according to ypur need -- Location: Kudelstaart  etc ...
+      - API1_URL=http://weather:8080/api?coins=BTCUSDT,ETHUSDT,ATOMUSDT,FILUSDT,LINKUSDT,XLMUSDT,BNBUSDT,THETAUSDT,XRPUSDT,IOTAUSDT&assets=USD-TRY,EUR-TRY,EUR-USD&location=Kudelstaart
+      - API2_URL=http://real-currency:8080
+      - PORT=8080
+      - TZ=Europe/Berlin  ## Specify TimeZone ----
+    depends_on:
+      - weather
+      - real-currency
+    networks:
+      - portal-network
+    restart: unless-stopped
+    command: ["/app/main"]  # Absolute path, no need for working_dir
+
+networks:
+  portal-network:
+    driver: bridge
+

@@ -1,0 +1,87 @@
+name: Deploy Live Portal Application
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - '**/*.go'
+      - 'Dockerfile'
+      - 'go.mod'
+      - 'go.sum'
+      - 'docker-compose.yml'
+  pull_request:
+    branches: [ "main", "master" ]
+
+env:
+  DOCKER_USER: ozkaya84
+  PORTAL_IMAGE_NAME: live-go-portal
+  WEATHER_IMAGE: ozkaya84/go-weather-api:latest
+  CURRENCY_IMAGE: ozkaya84/real-currency:latest
+
+jobs:
+  build-and-push-portal:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PAT }}
+      
+      - name: Extract metadata for Portal
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_HUB_USERNAME }}/${{ env.PORTAL_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha,format=long
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push Portal image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ github.sha }}
+
+  test-docker-compose:
+    runs-on: ubuntu-latest
+    needs: build-and-push-portal
+    if: github.event_name != 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Create .env file
+        run: |
+          echo "PORTAL_IMAGE=${{ env.DOCKER_HUB_USERNAME }}/${{ env.PORTAL_IMAGE_NAME }}:latest" > .env
+          echo "WEATHER_IMAGE=${{ env.WEATHER_IMAGE }}" >> .env
+          echo "CURRENCY_IMAGE=${{ env.CURRENCY_IMAGE }}" >> .env
+      
+      - name: Test docker-compose locally
+        run: |
+          docker-compose -f docker-compose.yml config
+          docker-compose pull
+          docker-compose up -d
+          sleep 10
+          docker-compose ps
+          docker-compose logs --tail=50
+          docker-compose down
