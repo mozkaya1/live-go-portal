@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: live-go-portal
+  namespace: musti-apps  ## your namespace ---
+  annotations:
+    field.cattle.io/description: "Live Go Portal - Main application"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: apps.deployment-musti-apps-live-go-portal
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: apps.deployment-musti-apps-live-go-portal
+        app: live-go-portal  
+    spec:
+      containers:
+        - name: live-go-portal
+          image: ozkaya84/live-go-portal:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: refreshTime  ## to set refreshTime
+              value: "5"
+            - name: TZ
+              value: Europe/Berlin  ## to set TimeZone
+              ## 2 deployments belows should be ready on your cluster / images-->	ozkaya84/go-weather-api  and ozkaya84/real-currency
+            - name: API1_URL  ## use your query according to your need . Location=Kudelstaart, and coins or assets ... 
+              value: 'http://weather-api:8080/api?coins=BTCUSDT,ETHUSDT,ATOMUSDT,FILUSDT,LINKUSDT,XLMUSDT,BNBUSDT,THETAUSDT,XRPUSDT,IOTAUSDT&assets=USD-TRY,EUR-TRY,EUR-USD&location=Kudelstaart'
+            - name: API2_URL
+              value: "http://real-currency-api:8080"
+            - name: PORT
+              value: "8080"
+
