@@ -2,11 +2,11 @@
 
 This web application combines multipple microservice to get real time data and fancy frontend with GO-Htmx and CSS.
 
-!\[preview\](./static/pic-selected-260222-1851-06.png
+![preview](./static/pic-selected-260222-1851-06.png)
 
 ## Code
 
-[mozkaya1@github.com](https://github.com/mozkaya1/go-monitoring-htmx)
+[mozkaya1@github.com](https://github.com/mozkaya1/live-go-portal)
 
 # Real Time Data
 
