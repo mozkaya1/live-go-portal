@@ -1,6 +1,6 @@
 # Live Go Portal - Realtime Weather / Markets
 
-This web application combines multipple microservice to get real time data and fancy frontend with GO-Htmx and CSS.
+This web application combines multiple microservice to get real time data and fancy frontend with GO-Htmx Websocket and CSS/HTML.
 
 ![preview](./static/pic-selected-260222-1851-06.png)
 
@@ -23,9 +23,22 @@ This web application combines multipple microservice to get real time data and f
 - Prime Assets such as Dollar/Euro/Gold
 
 # Installing / Running Services
-
-Run docker-compose to up all services.
+```bash
+git clone https://github.com/mozkaya1/live-go-portal.git
+sudo systemctl start docker
+cd live-go-portal/
+```
+Adjust your timezone, refresh time interval value on docker-compose file. Run docker-compose to up all services.
 
 ```bash
 sudo docker-compose up
+```
+# Running on Kubernetes/K8/K3/Rancher cluster
+Just apply  deploy-live-go-portal.yml and  deploy-live-go-portal-service.yml file from K8s/ folder..
+>P.S: 2 deployments are supposed to be ready already --> ozkaya84/real-currency as named=real-currency-api and ozkaya84/go-weather-api as named=weather-api
+
+```bash
+cd K8s
+kubectl apply -f deploy-live-go-portal.yml
+kubectl apply -f deploy-live-go-portal-service.yml
 ```
