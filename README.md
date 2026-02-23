@@ -2,7 +2,7 @@
 
 This web application combines multipple microservice to get real time data and fancy frontend with GO-Htmx and CSS.
 
-[preview](./static/pic-selected-260222-1851-06.png
+![preview](./static/pic-selected-260222-1851-06.png
 
 ## Code
 
