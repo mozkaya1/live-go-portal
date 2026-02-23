@@ -6,7 +6,7 @@ This web application combines multipple microservice to get real time data and f
 
 ## Code
 
-[mozkaya1@github.com](https://github.com/mozkaya1/go-monitoring-htmx)
+[mozkaya1@github.com](https://github.com/mozkaya1/live-go-portal)
 
 # Real Time Data
 
