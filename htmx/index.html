@@ -359,7 +359,7 @@
       </h1>
 
       <!-- WebSocket connection -->
-      <br hx-ext="ws" ws-connect="ws://localhost:8080/ws">
+      <br id="websocket-element" hx-ext="ws" ws-connect="ws://localhost:8080/ws">
 
       <!-- Timestamp -->
       <div class="timestamp" id="update-timestamp">
@@ -726,5 +726,24 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
 </body>
+
+<! -- To update websocket connection -->
+  <script>
+    // Override the WebSocket connection with the correct URL
+    (function () {
+      const wsElement = document.getElementById('websocket-element');
+      if (wsElement) {
+        const currentHost = window.location.host;
+
+        // Set the correct WebSocket URL
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${wsProtocol}//${currentHost}/ws`;
+
+        wsElement.setAttribute('ws-connect', wsUrl);
+
+        console.log('WebSocket URL set to:', wsUrl);
+      }
+    })();
+  </script>
 
 </html>
