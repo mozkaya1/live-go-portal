@@ -1,6 +1,6 @@
 # Live Go Portal - Realtime Weather / Markets
 
-This web application combines multiple microservice to get real time data and fancy frontend with GO-Htmx Websocket and CSS/HTML.
+This web application combines multiple microservices to get real time data and fancy frontend with GO-Htmx Websocket and CSS/HTML.
 
 ![preview](./static/pic-selected-260222-1851-06.png)
 
