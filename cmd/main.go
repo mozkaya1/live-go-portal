@@ -115,18 +115,18 @@ func (s *server) hasSubscribers() bool {
 // Helper function to get change class
 func getChangeClass(priceChange string) string {
 	priceChange = strings.TrimSpace(priceChange)
-	if strings.HasPrefix(priceChange, "-") {
+	if strings.HasPrefix(priceChange, "-") || strings.HasPrefix(priceChange, "%-") {
 		return "change-negative"
 	}
 
-	// Remove + sign if present and check if it's a positive number
-	clean := strings.TrimPrefix(priceChange, "+")
-	if clean != priceChange || (len(clean) > 0 && clean != "0" && clean != "0.00" && clean != "0.0") {
-		// It had a + sign or is a non-zero number
-		return "change-positive"
-	}
+	// // Remove + sign if present and check if it's a positive number
+	// clean := strings.TrimPrefix(priceChange, "+")
+	// if clean != priceChange || (len(clean) > 0 && clean != "0" && clean != "0.00" && clean != "0.0") {
+	// 	// It had a + sign or is a non-zero number
+	// 	return "change-positive"
+	// }
 
-	return "change-neutral"
+	return "change-positive"
 }
 
 func main() {
